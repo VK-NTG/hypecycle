@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vejle Kommune – Hype Cycle</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=K2D:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* Vejle Kommune farvepalette – de mørke */
+    --sort:#000000; --koksgra:#787076; --marine:#183C70; --petrolium:#004D60;
+    --kaffe:#593835; --bordeaux:#65212E; --okker:#9D3732; --karry:#B06916;
+    --lilla:#57256E; --flaskegron:#004139; --gran:#4D9072;
+    /* de lyse */
+    --aluminium:#C3BFC2; --himmelbla:#49B8EA; --duebla:#9AD6EF; --mint:#99D0C1;
+    --sogras:#D2E9E3; --sand:#D8C5AF; --beige:#EAE1D6; --orange:#F4AA34;
+    --abrikos:#F1CD99; --lemon:#F9E480; --vanilie:#FEF9D1; --violet:#DDD1E9; --irgron:#C1DFC4;
+    /* tema */
+    --paper:var(--beige); --card:#FCFAF4; --ink:var(--petrolium); --ink-soft:#33585f;
+    --line:#d9cfc0; --line-strong:var(--aluminium);
+    --shadow:0 1px 2px rgba(0,77,96,.10), 0 10px 30px rgba(0,65,57,.10);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{font-family:"K2D",-apple-system,sans-serif;font-weight:400;color:var(--ink);background:var(--paper);min-height:100vh;-webkit-font-smoothing:antialiased;}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.4;z-index:-1;
+    background:radial-gradient(900px 480px at 88% -8%, rgba(73,184,234,.10), transparent 60%),
+               radial-gradient(800px 460px at -8% 108%, rgba(77,144,114,.12), transparent 58%);}
+  body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;background:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxNDQwIDM2MCc+PHBhdGggZD0nTTAsMTc2IEMxNjAsMTE2IDMwMCwxMTggNDYwLDE2NCBDNjIwLDIxMCA3NzAsMjM2IDkyMCwxODQgQzEwNjAsMTQwIDEyMzAsMTE2IDE0NDAsMTU4IEwxNDQwLDM2MCBMMCwzNjAgWicgZmlsbD0nI0QyRTlFMycgZmlsbC1vcGFjaXR5PScwLjYwJy8+PHBhdGggZD0nTTAsMjQ4IEMyMDAsMTk2IDM5MCwyMDggNTYwLDI0NCBDNzQwLDI4MiA5MDUsMzAyIDEwODAsMjU0IEMxMjQ1LDIxMCAxMzQ1LDIzMCAxNDQwLDI0OCBMMTQ0MCwzNjAgTDAsMzYwIFonIGZpbGw9JyM5OUQwQzEnIGZpbGwtb3BhY2l0eT0nMC40MicvPjxwYXRoIGQ9J00wLDMwMCBDMjIwLDI3NCA0MjAsMjk2IDYyMCwzMDEgQzgyMCwzMDYgMTAyNSwyODQgMTIyNSwzMDAgQzEzMjUsMzA4IDEzODUsMzAwIDE0NDAsMzAyIEwxNDQwLDM2MCBMMCwzNjAgWicgZmlsbD0nIzREOTA3MicgZmlsbC1vcGFjaXR5PScwLjMwJy8+PC9zdmc+") center bottom / 100% auto no-repeat;}
+  .wrap{max-width:1320px;margin:0 auto;padding:18px 28px 28px;display:flex;flex-direction:column;min-height:100vh;}
+
+  /* utility-række med admin-adgang */
+  .util-row{display:flex;align-items:center;justify-content:flex-end;gap:12px;margin-bottom:8px;min-height:34px;}
+  .admin-badge{display:none;align-items:center;gap:7px;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gran);}
+  .admin-badge::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--gran);}
+  body.admin-mode .admin-badge{display:inline-flex;}
+  .admin-btn{background:transparent;border:1.5px solid var(--line-strong);color:var(--koksgra);font-size:12px;font-weight:700;letter-spacing:.10em;text-transform:uppercase;padding:7px 13px;border-radius:6px;cursor:pointer;transition:all .18s;display:inline-flex;align-items:center;gap:7px;}
+  .admin-btn:hover{border-color:var(--petrolium);color:var(--petrolium);}
+  body.admin-mode .admin-btn{border-color:var(--petrolium);color:var(--petrolium);}
+
+  header.top{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;border-bottom:2px solid var(--petrolium);padding-bottom:18px;}
+  .brand{display:flex;flex-direction:column;gap:2px;}
+  .vk-logo{height:56px;width:auto;flex:0 0 auto;display:block;}
+  .page-footer{display:flex;justify-content:flex-end;align-items:flex-end;margin-top:auto;padding-top:28px;padding-right:2px;}
+  .kicker{font-size:12px;letter-spacing:.30em;text-transform:uppercase;color:var(--gran);font-weight:700;}
+  h1{font-weight:800;font-size:clamp(36px,5.4vw,62px);line-height:.92;margin:5px 0 0;letter-spacing:-.01em;color:var(--petrolium);}
+  h1 .light{font-weight:300;}
+  .subtitle-row{display:flex;align-items:baseline;gap:8px;margin-top:9px;color:var(--ink-soft);font-size:16px;font-weight:300;}
+  .subtitle{font-style:italic;font-weight:300;font-size:18px;outline:none;border-bottom:1px dashed transparent;padding:0 2px;transition:border-color .2s;color:var(--ink-soft);}
+  body.admin-mode .subtitle:hover,body.admin-mode .subtitle:focus{border-bottom-color:var(--line-strong);}
+  .meta{text-align:right;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--koksgra);font-weight:600;}
+  .meta .year{font-weight:800;font-size:32px;color:var(--petrolium);display:block;line-height:1;letter-spacing:0;text-transform:none;}
+  .meta .year[contenteditable]{outline:none;border-bottom:1px dashed transparent;}
+  body.admin-mode .meta .year:hover,body.admin-mode .meta .year:focus{border-bottom-color:var(--line-strong);}
+  .wordmark{font-weight:800;letter-spacing:.20em;font-size:13px;color:var(--petrolium);margin-top:6px;text-transform:uppercase;}
+
+  /* toolbar – kun i admin */
+  .toolbar{display:none;align-items:center;gap:12px;flex-wrap:wrap;margin:22px 0 14px;}
+  body.admin-mode .toolbar{display:flex;}
+  button{font-family:inherit;cursor:pointer;border:none;font-weight:700;}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:6px;font-size:14px;transition:transform .12s ease, box-shadow .2s, background .2s;}
+  .btn:active{transform:translateY(1px);}
+  .btn-primary{background:var(--petrolium);color:var(--card);box-shadow:var(--shadow);}
+  .btn-primary:hover{background:var(--flaskegron);}
+  .btn-ghost{background:transparent;color:var(--ink-soft);border:1.5px solid var(--line-strong);}
+  .btn-ghost:hover{border-color:var(--petrolium);color:var(--petrolium);}
+  .save-note{margin-left:auto;font-size:12.5px;color:var(--gran);display:flex;align-items:center;gap:7px;letter-spacing:.02em;font-weight:600;}
+  .save-note .dot{width:8px;height:8px;border-radius:50%;background:var(--gran);}
+  .save-note.flash .dot{animation:pulse .9s ease;}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(77,144,114,.5);}100%{box-shadow:0 0 0 10px rgba(77,144,114,0);}}
+
+  .layout{display:grid;grid-template-columns:1fr;gap:26px;align-items:start;margin-top:16px;}
+  body.admin-mode .layout{grid-template-columns:1fr 312px;}
+  .card{background:var(--card);border:1.5px solid var(--line);border-radius:10px;box-shadow:var(--shadow);}
+  .chart-card{padding:14px 14px 8px;overflow:hidden;}
+  svg#chart{width:100%;height:auto;display:block;touch-action:none;user-select:none;}
+  body.view-mode .marker{cursor:default;}
+
+  /* signaturforklaring under kurven (vises i visningstilstand) */
+  .legend-strip{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:10px 24px;padding:14px 12px 8px;border-top:1.5px solid var(--line);margin-top:6px;}
+  body.admin-mode .legend-strip{display:none;}
+  .legend-strip .strip-label{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gran);font-weight:700;margin-right:4px;}
+  .legend-strip .legend-item{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-soft);font-weight:500;}
+
+  /* panel – kun i admin */
+  .panel{display:none;padding:20px 20px 22px;position:sticky;top:18px;}
+  body.admin-mode .panel{display:block;}
+  .panel h2{font-weight:800;font-size:21px;margin:0 0 4px;color:var(--petrolium);}
+  .panel .hint{font-size:13.5px;color:var(--ink-soft);line-height:1.55;margin:0 0 16px;font-weight:300;}
+  .field{margin-bottom:16px;}
+  .field label{display:block;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gran);font-weight:700;margin-bottom:6px;}
+  .field input[type=text]{width:100%;font-family:inherit;font-size:15px;font-weight:500;padding:10px 12px;border:1.5px solid var(--line-strong);border-radius:6px;background:#fff;color:var(--petrolium);outline:none;transition:border-color .2s;}
+  .field input[type=text]:focus{border-color:var(--petrolium);}
+  .cats{display:flex;flex-direction:column;gap:7px;}
+  .cat-opt{display:flex;align-items:center;gap:10px;padding:8px 10px;border:1.5px solid var(--line);border-radius:6px;cursor:pointer;font-size:14px;font-weight:500;transition:border-color .15s, background .15s;}
+  .cat-opt:hover{background:var(--beige);}
+  .cat-opt.active{border-color:var(--petrolium);background:#fff;}
+  .cat-opt input{display:none;}
+  .swatch{width:14px;height:14px;border-radius:50%;flex:0 0 auto;}
+  .swatch.hollow{background:#fff !important;border:2px solid var(--koksgra);}
+  .phase-readout{font-size:13.5px;color:var(--ink-soft);margin:2px 0 18px;font-weight:300;}
+  .phase-readout b{color:var(--petrolium);font-weight:700;}
+  .panel-actions{display:flex;gap:10px;}
+  .btn-danger{background:transparent;color:var(--okker);border:1.5px solid var(--okker);padding:9px 14px;border-radius:6px;font-size:13px;}
+  .btn-danger:hover{background:var(--okker);color:#fff;}
+  .divider{height:1.5px;background:var(--line);margin:20px 0;}
+  .legend h3{font-weight:700;font-size:16px;margin:0 0 10px;color:var(--petrolium);}
+  .legend-item .swatch{margin:0;}
+  .panel .legend .legend-item{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ink-soft);margin-bottom:7px;font-weight:400;}
+
+  /* SVG markører */
+  .marker .dot{stroke:#FCFAF4;stroke-width:2.5;transition:r .12s ease;}
+  body.admin-mode .marker{cursor:grab;}
+  body.admin-mode .marker:active{cursor:grabbing;}
+  .marker .halo{fill:none;stroke-width:2;opacity:0;transition:opacity .15s;}
+  .marker.selected .halo{opacity:1;}
+  .marker.selected .dot{r:11;}
+  .marker .lbl{font-family:"K2D",sans-serif;font-size:14px;font-weight:600;fill:var(--petrolium);paint-order:stroke;stroke:#FCFAF4;stroke-width:3.8px;stroke-linejoin:round;}
+
+  /* modal til admin-login */
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,65,57,.34);display:none;align-items:center;justify-content:center;z-index:100;padding:20px;backdrop-filter:blur(2px);}
+  .modal-overlay.open{display:flex;}
+  .modal{background:var(--card);border:1.5px solid var(--line);border-radius:12px;box-shadow:0 20px 60px rgba(0,65,57,.28);padding:28px 26px 24px;width:340px;max-width:100%;}
+  .modal h3{margin:0 0 6px;font-weight:800;font-size:20px;color:var(--petrolium);}
+  .modal p{margin:0 0 16px;font-size:13.5px;color:var(--ink-soft);font-weight:300;line-height:1.5;}
+  .modal input{width:100%;font-family:inherit;font-size:16px;font-weight:500;padding:11px 13px;border:1.5px solid var(--line-strong);border-radius:6px;background:#fff;color:var(--petrolium);outline:none;letter-spacing:.04em;}
+  .modal input:focus{border-color:var(--petrolium);}
+  .modal .err{color:var(--okker);font-weight:600;font-size:13px;margin:10px 0 0;display:none;}
+  .modal .err.show{display:block;}
+  .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:18px;}
+
+  @media (max-width:920px){
+    body.admin-mode .layout{grid-template-columns:1fr;}
+    .panel{position:static;}
+  }
+</style>
+</head>
+<body class="view-mode">
+<div class="wrap">
+
+  <div class="util-row">
+    <span class="admin-badge">Admin-tilstand</span>
+    <button class="admin-btn" id="adminBtn">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="3.2"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.6-2-3.4-2.4 1a7 7 0 0 0-2-1.2L14 1h-4l-.5 2.6a7 7 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.6A7 7 0 0 0 5 12a7 7 0 0 0 .1 1.2l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 2 1.2L10 23h4l.5-2.6a7 7 0 0 0 2-1.2l2.4 1 2-3.4-2-1.6A7 7 0 0 0 19 12Z"/></svg>
+      <span id="adminBtnTxt">Admin</span>
+    </button>
+  </div>
+
+  <header class="top">
+    <div class="brand">
+      <h1>Hype <span class="light">Cycle</span></h1>
+      <div class="subtitle-row">
+        <span>for</span>
+        <span class="subtitle" id="subtitle" contenteditable="false" spellcheck="false">teknologier i Vejle Kommune</span>
+      </div>
+    </div>
+    <div class="meta">
+      Udgave
+      <span class="year" id="year" contenteditable="false" spellcheck="false">2026</span>
+    </div>
+  </header>
+
+  <div class="toolbar">
+    <button class="btn btn-primary" id="addBtn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+      Tilføj teknologi
+    </button>
+    <button class="btn btn-ghost" id="resetBtn">Nulstil til udgangspunkt</button>
+    <span class="save-note" id="saveNote"><span class="dot"></span>Gemmes automatisk</span>
+  </div>
+
+  <div class="layout">
+    <div class="card chart-card">
+      <svg id="chart" viewBox="0 0 1000 600" role="img" aria-label="Hype cycle som Vejle-horisontlinje"></svg>
+      <div class="legend-strip" id="legendStrip"></div>
+    </div>
+    <aside class="card panel" id="panel"></aside>
+  </div>
+  <footer class="page-footer"><img class="vk-logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NDEuMTUgMTc2LjQiPjxkZWZzPjxzdHlsZT4uY2xzLTF7ZmlsbDojZmZmO30uY2xzLTJ7ZmlsbDojNTZhZjMxO30uY2xzLTN7ZmlsbDojMDA3OGJmO30uY2xzLTR7ZmlsbDojMWQxZDFiO30uY2xzLTV7ZmlsbDojZTczMTM3O308L3N0eWxlPjwvZGVmcz48ZyBpZD0iTGF5ZXJfMiIgZGF0YS1uYW1lPSJMYXllciAyIj48ZyBpZD0iTGF5ZXJfMS0yIiBkYXRhLW5hbWU9IkxheWVyIDEiPjxwb2x5Z29uIHBvaW50cz0iMTc0LjA5IDE2MC42NSAxNzQuMDkgMTI3IDE3Ny40MSAxMjcgMTc3LjQxIDE0Ni41NSAxOTUuOTQgMTI2Ljk1IDE5OS41OSAxMjYuOTUgMTg1Ljg0IDE0MS43NiAyMDAuMyAxNjAuNjUgMTk2LjU2IDE2MC42NSAxODMuNzEgMTQzLjc1IDE3Ny40MSAxNTAuMyAxNzcuNDEgMTYwLjY1IDE3NC4wOSAxNjAuNjUiLz48cGF0aCBkPSJNMjIwLjksMTYwLjg4YTE0LjQsMTQuNCwwLDAsMS02LjQ1LTEuNDIsMTUuMzMsMTUuMzMsMCwwLDEtNS0zLjg2LDE4LjIsMTguMiwwLDAsMS0zLjIzLTUuNSwxOCwxOCwwLDAsMS0xLjEzLTYuMjhBMTcuNjUsMTcuNjUsMCwwLDEsMjA5LjY0LDEzMmExNi4xNywxNi4xNywwLDAsMSw1LjA1LTMuNzksMTQuMjEsMTQuMjEsMCwwLDEsNi4yNi0xLjQsMTQsMTQsMCwwLDEsNi40NCwxLjQ3LDE1LjcsMTUuNywwLDAsMSw1LDMuOTMsMTkuMDUsMTkuMDUsMCwwLDEsMy4yLDUuNSwxNy43OSwxNy43OSwwLDAsMS0zLjM3LDE4LjA4LDE1LjcyLDE1LjcyLDAsMCwxLTUsMy43NywxNC4zNiwxNC4zNiwwLDAsMS02LjI2LDEuMzdtLTEyLjQ3LTE3LjA2YTE1LjY4LDE1LjY4LDAsMCwwLC45LDUuMjksMTQuNDcsMTQuNDcsMCwwLDAsMi41Niw0LjUsMTIuNjksMTIuNjksMCwwLDAsNCwzLjEzLDExLjEsMTEuMSwwLDAsMCw1LjA1LDEuMTYsMTAuOTIsMTAuOTIsMCwwLDAsNS4xOS0xLjIxLDEyLjQ4LDEyLjQ4LDAsMCwwLDMuOTMtMy4yMiwxNC42MSwxNC42MSwwLDAsMCwyLjQ5LTQuNTMsMTUuNzcsMTUuNzcsMCwwLDAsLjg2LTUuMTIsMTUuNTEsMTUuNTEsMCwwLDAtLjktNS4yNiwxNC40OSwxNC40OSwwLDAsMC0yLjU5LTQuNSwxMi4zNSwxMi4zNSwwLDAsMC00LTMuMTMsMTEuNjYsMTEuNjYsMCwwLDAtMTAuMTYsMCwxMi4wOSwxMi4wOSwwLDAsMC0zLjk0LDMuMiwxNSwxNSwwLDAsMC0yLjUxLDQuNTIsMTUuNjIsMTUuNjIsMCwwLDAtLjg4LDUuMTIiLz48cG9seWdvbiBwb2ludHM9IjI3NS45NCAxNjAuNjUgMjc1Ljk0IDEzMy4yNSAyNjMuNzYgMTU0LjUzIDI2MS42OCAxNTQuNTMgMjQ5LjQ1IDEzMy4yNSAyNDkuNDUgMTYwLjY1IDI0Ni4xMyAxNjAuNjUgMjQ2LjEzIDEyNyAyNDkuNTQgMTI3IDI2Mi42NyAxNTAuMDMgMjc1LjkgMTI3IDI3OS4yNiAxMjcgMjc5LjI2IDE2MC42NSAyNzUuOTQgMTYwLjY1Ii8+PHBvbHlnb24gcG9pbnRzPSIzMjIuNDYgMTYwLjY1IDMyMi40NiAxMzMuMjUgMzEwLjI4IDE1NC41MyAzMDguMTkgMTU0LjUzIDI5NS45NiAxMzMuMjUgMjk1Ljk2IDE2MC42NSAyOTIuNjQgMTYwLjY1IDI5Mi42NCAxMjcgMjk2LjA2IDEyNyAzMDkuMTkgMTUwLjAzIDMyMi40MSAxMjcgMzI1Ljc3IDEyNyAzMjUuNzcgMTYwLjY1IDMyMi40NiAxNjAuNjUiLz48cGF0aCBkPSJNMzUxLjM1LDE2MC44OWExNC40OSwxNC40OSwwLDAsMS02LjczLTEuNDMsMTEuNTUsMTEuNTUsMCwwLDEtNC4zNi0zLjgxLDE2LjgsMTYuOCwwLDAsMS0yLjM0LTUuNDMsMjYuNDYsMjYuNDYsMCwwLDEtLjc0LTYuMjVWMTI3aDMuMjd2MTdhMjMuNTksMjMuNTksMCwwLDAsLjU1LDUuMTEsMTQuMTcsMTQuMTcsMCwwLDAsMS43Nyw0LjUxLDkuMTMsOS4xMywwLDAsMCwzLjMyLDMuMTUsMTIuMzMsMTIuMzMsMCwwLDAsMTAuNTUtLjA1LDkuMTEsOS4xMSwwLDAsMCwzLjMyLTMuMiwxNC4zNywxNC4zNywwLDAsMCwxLjczLTQuNDgsMjUuMDYsMjUuMDYsMCwwLDAsLjUyLTVWMTI3aDMuMzJ2MTdhMjcuMTEsMjcuMTEsMCwwLDEtLjc2LDYuNDQsMTUuMzMsMTUuMzMsMCwwLDEtMi40NCw1LjQsMTIuMSwxMi4xLDAsMCwxLTQuMzksMy43LDE0LjM2LDE0LjM2LDAsMCwxLTYuNTksMS4zOCIvPjxwb2x5Z29uIHBvaW50cz0iMzgwLjg1IDEzMy4xMSAzODAuODUgMTYwLjY1IDM3Ny41MyAxNjAuNjUgMzc3LjUzIDEyNyAzODAuMjggMTI3IDQwMi4zNyAxNTUuMDYgNDAyLjM3IDEyNy4wNSA0MDUuNjkgMTI3LjA1IDQwNS42OSAxNjAuNjUgNDAyLjYxIDE2MC42NSAzODAuODUgMTMzLjExIi8+PHBvbHlnb24gcG9pbnRzPSI0MTguNDcgMTI3IDQxOC40NyAxNjAuNjUgNDQxLjA4IDE2MC42NSA0NDEuMDggMTU3LjcxIDQyMS43OCAxNTcuNzEgNDIxLjc4IDE0NC44NyA0MzguMjMgMTQ0Ljg3IDQzOC4yMyAxNDIuMDcgNDIxLjc4IDE0Mi4wNyA0MjEuNzggMTI5Ljk0IDQ0MC42NSAxMjkuOTQgNDQwLjY1IDEyNyA0MTguNDcgMTI3Ii8+PHBhdGggZD0iTTQ0MS4xNSwxNS41OEg0MDQuNzJ2NDdBNDcuNDMsNDcuNDMsMCwwLDAsNDE4LjM0LDk0YzkuMjksOS4yOSwyMS44OCwxMS45MSwyMiwxMS45M2wuODEuMTdWOTcuNzdoMGMtMi42MS0uNjktMTAuODYtMy4yNy0xNy4xMS05LjUzYTM5LDM5LDAsMCwxLTExLjIyLTI1LjU2VjU0LjQxaDI4LjMzVjQ2LjI0SDQxMi44MlYyMy43NWgyOC4zM1oiLz48cGF0aCBkPSJNMzc2LjM5LDE1LjU3aC04LjF2NDdBNDcuNTQsNDcuNTQsMCwwLDAsMzgxLjkxLDk0YzkuMjIsOS4yMiwyMS44OSwxMS45MSwyMiwxMS45M2wuNzguMTdoMFY5Ny43N2MtMi42MS0uNy0xMC44Ni0zLjI4LTE3LjExLTkuNTNhMzksMzksMCwwLDEtMTEuMjItMjUuNThaIi8+PHBhdGggZD0iTTM1Mi4xNCwxNS41N0gzMTUuNzF2OC4xN2gyOC4zNFY2Mi42NmEzOSwzOSwwLDAsMS0xMS4yMywyNS41OGMtNi4yNSw2LjI1LTE0LjQ5LDguODMtMTcuMTEsOS41M3Y4LjM3aDBsLjc4LS4xN2MuMTMsMCwxMi44LTIuNzEsMjItMTEuOTNhNDcuNDgsNDcuNDgsMCwwLDAsMTMuNjItMzEuNDNaIi8+PHBhdGggZD0iTTI5OS41NiwxNS41OEgyNjMuMTN2NDdBNDcuMzMsNDcuMzMsMCwwLDAsMjc2Ljc1LDk0YzkuMjksOS4yOSwyMS44OCwxMS45MSwyMiwxMS45M2wuOC4xN1Y5Ny43N2gwYy0yLjYxLS42OS0xMC44NS0zLjI3LTE3LjExLTkuNTNhMzksMzksMCwwLDEtMTEuMjItMjUuNTZWNTQuNDFoMjguMzNWNDYuMjRIMjcxLjIzVjIzLjc1aDI4LjMzWiIvPjxwYXRoIGQ9Ik0yNDcsMTUuNjJoLTguMDl2NDQuMWExNS42LDE1LjYsMCwwLDEtLjE4LDIuMSwzMS40MSwzMS40MSwwLDAsMS0yLjU5LDguNTYsNDEuMjMsNDEuMjMsMCwwLDEtOC41MiwxMi4wNWMtMS44NywxLjg4LTQsMy44LTYuMiw1LjYxLTMuMjYsMi43Mi02LjU2LDUuMTktOSw3bC0xLjgzLDEuMzJjLTEuMjEtLjg2LTIuODItMi00LjY0LTMuMzhzLTQuMTItMy4xNS02LjI3LTUtNC4zLTMuNzEtNi4xNS01LjU3YTQzLjEyLDQzLjEyLDAsMCwxLTYuNTMtOC4yNiwzNC44OCwzNC44OCwwLDAsMS00LjE2LTEwLjA5LDI2LjE3LDI2LjE3LDAsMCwxLS41My0zLjExYy0uMDctLjc1LS4wOC0xLjE5LS4wOC0xLjI1VjE1LjYyaC04LjA4djQ0LjFhMjMuNjcsMjMuNjcsMCwwLDAsLjI2LDMuMjQsMzkuOTIsMzkuOTIsMCwwLDAsMy4yNCwxMC43OCw0OS41Myw0OS41MywwLDAsMCwxMC4xNiwxNC40MWMyLjExLDIuMTEsNC40Myw0LjE3LDYuNzQsNi4xLDMuNDYsMi44OCw2Ljg5LDUuNDYsOS40Nyw3LjMyczQuMjksMyw0LjMyLDNsMi4yNSwxLjUsMi4yNC0xLjVzMy4wOS0yLjA2LDcuMTYtNS4xMmMyLTEuNTIsNC4zMy0zLjMxLDYuNjMtNS4yM3M0LjYzLTQsNi43NC02LjFBNTAuNjUsNTAuNjUsMCwwLDAsMjQxLDc4LjM0YTQyLjgyLDQyLjgyLDAsMCwwLDUuMTItMTIuNDQsMzQuMjYsMzQuMjYsMCwwLDAsLjctNC4xMWMuMS0xLjA2LjEyLTEuNzguMTItMi4wN1oiLz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik03MC4zNywxNzUuMjNzMjQuNTYtNSw0Mi42Ni0yMi45QzE0MC4xOSwxMjUuNDUsMTM5LjU4LDkyLDEzOS41OCw5MlYxLjE0SDEuMTZWOTJTLjU1LDEyNS40NSwyNy43LDE1Mi4zM2MxOC4xMSwxNy45MSw0Mi42OCwyMi45LDQyLjY4LDIyLjlaIi8+PHBhdGggY2xhc3M9ImNscy0yIiBkPSJNMTM5LjU4LDkyLjY4QTIwLjM4LDIwLjM4LDAsMCwwLDEyMC45Miw4MC42Yy0uNTQsMC0xLjA3LDAtMS42LjA2LS4xNy0yLjkzLS40OS04LjcyLS43OS0xNC44OWw1LjI2LTUuODljMS43Ni41Niw1LjQsMS4zNCw3LjcxLTEsMy4xNS0zLjEyLDIuOTQtNi40LDMuMjEtOC40N2ExNi4xNCwxNi4xNCwwLDAsMSwuODgtMy42NWgwYTE2LjI2LDE2LjI2LDAsMCwxLTMuNjkuODdjLTIuMDkuMjctNS40MS4wNi04LjU1LDMuMTctMi4zMiwyLjMtMS41NCw1LjkxLTEsNy42NGwtNCwzLjUxYy0uMjctNi4xOC0uNDgtMTIuMi0uNDUtMTUuNjEsMC0uMTQsMC0uMjgsMC0uNDJsNS4xNC01Ljc2YzEuNzYuNTYsNS40LDEuMzQsNy43MS0xLDMuMTUtMy4xMSwyLjk0LTYuNCwzLjIxLTguNDdhMTYuNTIsMTYuNTIsMCwwLDEsLjg3LTMuNjVoMGExNi4yNiwxNi4yNiwwLDAsMS0zLjY5Ljg3Yy0yLjA5LjI3LTUuNDEuMDYtOC41NiwzLjE4LTIuMzEsMi4yOS0xLjUzLDUuOS0xLDcuNjNsLTMuNzUsMy4yN2MtLjA5LTYuMzMtLjQtMTQuNDQtLjUyLTE3LjUsMS42OS0uODksNC41Ni0yLjg1LDQuNTYtNiwwLTQuNC0yLjQ5LTYuNTgtMy43OC04LjIzYTE2LjI3LDE2LjI3LDAsMCwxLTItMy4xOWgwYTE2LjI3LDE2LjI3LDAsMCwxLTIsMy4xOWMtMS4yOCwxLjY1LTMuNzgsMy44My0zLjc4LDguMjMsMCwzLjA5LDIuODUsNS4wNSw0LjU0LDUuOTUtLjEyLDMtLjQzLDExLjE1LS41MiwxNy40OWwtMy43Mi0zLjI1Yy41Ny0xLjczLDEuMzYtNS4zNC0xLTcuNjMtMy4xNS0zLjEyLTYuNDctMi45MS04LjU1LTMuMThhMTYuMDcsMTYuMDcsMCwwLDEtMy42OS0uODdoMGExNS44NiwxNS44NiwwLDAsMSwuODcsMy42NWMuMjcsMi4wNy4wNyw1LjM2LDMuMjEsOC40NywyLjMyLDIuMjksNiwxLjUxLDcuNzEsMWw1LjEzLDUuNzR2LjQ0YzAsMy40LS4xNyw5LjQyLS40NSwxNS41OWwtNC0zLjQ5Yy41OC0xLjczLDEuMzYtNS4zNC0xLTcuNjQtMy4xNS0zLjExLTYuNDctMi45LTguNTYtMy4xN2ExNi4yNiwxNi4yNiwwLDAsMS0zLjY5LS44N2gwYTE1Ljg2LDE1Ljg2LDAsMCwxLC44NywzLjY1Yy4yNywyLjA3LjA3LDUuMzUsMy4yMSw4LjQ3LDIuMzIsMi4yOSw2LDEuNTEsNy43MSwxbDUuMjQsNS44N2MtLjM2LDcuNDktLjc2LDE0LjQ1LS44NywxNi4zNy01LjUsMi4xNi05Ljg4LDYuNDctMTEuMiwxMi00LDE2LjQ3LTIuODEsMTYuNjEtMTYuMjcsNzYuMiw4LjMyLTMuNTEsMTguNzQtOS4xOCwyNy42Mi0xOCwyNC44OS0yNC42NCwyNi40NS01NC43OSwyNi41NC01OS42NSIvPjxwYXRoIGNsYXNzPSJjbHMtMiIgZD0iTTEuMTQsOTIuNjhBMjAuMzksMjAuMzksMCwwLDEsMTkuODEsODAuNnEuOCwwLDEuNTkuMDZjLjE3LTIuOTMuNDktOC43Mi43OS0xNC44OWwtNS4yNi01Ljg5Yy0xLjc2LjU2LTUuNCwxLjM0LTcuNzEtMUM2LjA4LDU1LjgxLDYuMjgsNTIuNTMsNiw1MC40NmExNS44NiwxNS44NiwwLDAsMC0uODctMy42NWgwYTE2LjI2LDE2LjI2LDAsMCwwLDMuNjkuODdjMi4wOS4yNyw1LjQxLjA2LDguNTYsMy4xNywyLjMxLDIuMywxLjUzLDUuOTEuOTUsNy42NGw0LDMuNTFjLjI3LTYuMTguNDktMTIuMi40NS0xNS42MSwwLS4xNCwwLS4yOCwwLS40MkwxNy42Nyw0MC4yYy0xLjc2LjU2LTUuMzksMS4zNC03LjcxLTFDNi44MiwzNi4xNCw3LDMyLjg1LDYuNzUsMzAuNzhhMTUuODYsMTUuODYsMCwwLDAtLjg3LTMuNjVoMEExNi4yNiwxNi4yNiwwLDAsMCw5LjU3LDI4YzIuMDkuMjcsNS40MS4wNiw4LjU2LDMuMTgsMi4zMiwyLjI5LDEuNTMsNS45Ljk1LDcuNjNsMy43NSwzLjI3Yy4wOS02LjMzLjQtMTQuNDQuNTItMTcuNS0xLjY5LS44OS00LjU2LTIuODUtNC41Ni02LDAtNC40LDIuNS02LjU4LDMuNzgtOC4yM2ExNi4yNywxNi4yNywwLDAsMCwyLTMuMTloMGExNi4yNywxNi4yNywwLDAsMCwyLDMuMTljMS4yOCwxLjY1LDMuNzgsMy44MywzLjc4LDguMjMsMCwzLjA5LTIuODUsNS4wNS00LjU0LDUuOTUuMTIsMywuNDMsMTEuMTUuNTIsMTcuNDlsMy43My0zLjI1Yy0uNTgtMS43My0xLjM2LTUuMzQuOTUtNy42MywzLjE1LTMuMTIsNi40Ny0yLjkxLDguNTYtMy4xOGExNi4yNiwxNi4yNiwwLDAsMCwzLjY5LS44N2gwYTE1Ljg2LDE1Ljg2LDAsMCwwLS44NywzLjY1Yy0uMjcsMi4wNy0uMDcsNS4zNi0zLjIxLDguNDctMi4zMiwyLjI5LTYsMS41MS03LjcxLDFsLTUuMTIsNS43NHYuNDRjMCwzLjQuMTgsOS40Mi40NSwxNS41OWw0LTMuNDljLS41OC0xLjczLTEuMzYtNS4zNCwxLTcuNjQsMy4xNC0zLjExLDYuNDYtMi45LDguNTUtMy4xN0ExNi4yNiwxNi4yNiwwLDAsMCw0NCw0Ni44aDBhMTYuNTIsMTYuNTIsMCwwLDAtLjg3LDMuNjVjLS4yNywyLjA3LS4wNiw1LjM1LTMuMjEsOC40Ny0yLjMyLDIuMjktNS45NSwxLjUxLTcuNzEsMUwyNyw2NS43NWMuMzYsNy40OS43NiwxNC40NS44NywxNi4zNyw1LjUsMi4xNiw5Ljg5LDYuNDcsMTEuMjEsMTIsNCwxNi40NywyLjgsMTYuNjEsMTYuMjYsNzYuMi04LjMyLTMuNTEtMTguNzQtOS4xOC0yNy42MS0xOEMyLjc5LDEyNy42OSwxLjIzLDk3LjU0LDEuMTQsOTIuNjgiLz48cGF0aCBjbGFzcz0iY2xzLTMiIGQ9Ik03My43LDE0Ni4wOWMwLTguMDktNy45My0xMi44Ny03LjkzLTIyLjMxLDAtMTQuMDksOS4xOS0xOC4zMyw5LjE5LTI4LjA3LDAtMTQtOS4xOS0xNi4zNC05LjE5LTI3LjkyQzY1Ljc3LDU3LjY5LDc1LDUzLDc1LDQxLjg5YzAtMTEuMjktOS4xOS0xNC42OC05LjE5LTI1Ljc1LDAtNy4wNiwzLjU4LTEwLjM1LDYuMjYtMTVINjEuMzdjLTIuNjcsNC42NS02LjI2LDcuOTQtNi4yNiwxNSwwLDExLjA3LDkuMTksMTQuNDYsOS4xOSwyNS43NSwwLDExLjA2LTkuMTksMTUuOC05LjE5LDI1LjksMCwxMS41OCw5LjE5LDEzLjg5LDkuMTksMjcuOTIsMCw5Ljc0LTkuMTksMTQtOS4xOSwyOC4wNywwLDkuNDQsNy45NCwxNC4yMiw3Ljk0LDIyLjMxLDAsOS44Mi02LDEwLjcxLTYsMjAuNjZhMjcuNTMsMjcuNTMsMCwwLDAsLjM0LDQuMzYsOTQuMzEsOTQuMzEsMCwwLDAsMTEuNTMsMy43NywyOC4wOCwyOC4wOCwwLDAsMS0xLjIyLTguMTNjMC05Ljk1LDYtMTAuODQsNi0yMC42NiIvPjxwYXRoIGNsYXNzPSJjbHMtMyIgZD0iTTg4LDE0Ni4wOWMwLTguMDktNy45My0xMi44Ny03LjkzLTIyLjMxLDAtMTQuMDksOS4xOS0xOC4zMyw5LjE5LTI4LjA3LDAtMTQtOS4xOS0xNi4zNC05LjE5LTI3LjkyLDAtMTAuMSw5LjE5LTE0Ljg0LDkuMTktMjUuOSwwLTExLjI5LTkuMTktMTQuNjgtOS4xOS0yNS43NSwwLTcuMDYsMy41OC0xMC4zNSw2LjI2LTE1SDc1LjY1Yy0yLjY3LDQuNjUtNi4yNiw3Ljk0LTYuMjYsMTUsMCwxMS4wNyw5LjE5LDE0LjQ2LDkuMTksMjUuNzUsMCwxMS4wNi05LjE5LDE1LjgtOS4xOSwyNS45LDAsMTEuNTgsOS4xOSwxMy44OSw5LjE5LDI3LjkyLDAsOS43NC05LjE5LDE0LTkuMTksMjguMDcsMCw5LjQ0LDcuOTQsMTQuMjIsNy45NCwyMi4zMSwwLDkuODItNi4wNiwxMC43MS02LjA2LDIwLjY2YTI3Ljg2LDI3Ljg2LDAsMCwwLDEuMTgsOCw5NS4wNyw5NS4wNywwLDAsMCw5LjktMy4yMSwyNy42NywyNy42NywwLDAsMS0uNDItNC43N2MwLTkuOTUsNi0xMC44NCw2LTIwLjY2Ii8+PHBhdGggY2xhc3M9ImNscy00IiBkPSJNMTM4LjQzLDIuMjlWOTIuMWMwLDItLjQ0LDMzLjkyLTI2LjIxLDU5LjQyLTE2LjczLDE2LjU1LTM5LjM2LDIyLTQxLjg1LDIyLjU0LTIuNDktLjU2LTI1LjEyLTYtNDEuODUtMjIuNTRDMi43NSwxMjYsMi4zMSw5NC4wOCwyLjMxLDkyLjEyVjIuMjlaTTAsMFY5MmMwLC4zMi0uMywzNC4yMywyNi44OSw2MS4xNCwxOC4xNCwxOCw0MywyMy4xNiw0My4yNSwyMy4yMWwuMjQuMDUuMjItLjA1Yy4yNSwwLDI1LjEyLTUuMjYsNDMuMjUtMjMuMjFDMTQxLDEyNi4yMywxNDAuNzUsOTIuMzIsMTQwLjc0LDkyVjBaIi8+PHBhdGggY2xhc3M9ImNscy01IiBkPSJNNDMsMTEzLjA5YTU1LjEsNTUuMSwwLDAsMSw1NC43OCwwYzEuNDctNy42MSwyLjE2LTExLjUzLDQtMTlhMTUuMDcsMTUuMDcsMCwwLDEsMS43NS00LjI1LDcxLjI1LDcxLjI1LDAsMCwwLTY2LjE4LDBBMTUuMDcsMTUuMDcsMCwwLDEsMzksOTQuMDljMS44LDcuNDcsMi40OCwxMS4zOSw0LDE5Ii8+PC9nPjwvZz48L3N2Zz4=" alt="Vejle Kommune"></footer>
+</div>
+
+<!-- Admin-login -->
+<div class="modal-overlay" id="adminModal">
+  <div class="modal">
+    <h3>Admin-adgang</h3>
+    <p>Indtast adgangskoden for at redigere teknologierne. Forsiden forbliver et rent visningsbillede.</p>
+    <input type="password" id="adminCode" placeholder="Adgangskode" autocomplete="off">
+    <p class="err" id="adminErr">Forkert adgangskode – prøv igen.</p>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="adminCancel">Annullér</button>
+      <button class="btn btn-primary" id="adminLogin">Lås op</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* =========================================================
+     ADMIN-ADGANGSKODE  –  skift denne for at sætte jeres egen.
+     (Bemærk: dette er en simpel skærm der skjuler redigerings-
+     værktøjerne, ikke en sikker login-løsning.)
+     ========================================================= */
+  const ADMIN_CODE = "vejle";
+
+  /* ---------- Persistent storage via /api/state (Azure Blob) ---------- */
+  const API = "/api/state";
+  async function loadState(){
+    try{
+      const res = await fetch(API, {cache:"no-store"});
+      if(res.ok){ const data = await res.json(); return (data && Array.isArray(data.techs)) ? data : null; }
+    }catch(e){ console.warn("Kunne ikke hente data:", e); }
+    return null;
+  }
+  let saveTimer=null;
+  function scheduleSave(){
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(async ()=>{
+      try{
+        const res = await fetch(API, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(state)});
+        if(res.ok) flashSaved(); else console.warn("Gem fejlede:", res.status);
+      }catch(e){ console.warn("Kunne ikke gemme:", e); }
+    }, 400);
+  }
+  function flashSaved(){ const n=document.getElementById("saveNote"); n.classList.remove("flash"); void n.offsetWidth; n.classList.add("flash"); }
+
+  /* ---------- Kategorier ("tid til plateau") – Vejle de mørke ---------- */
+  const CATS = {
+    lt2:      {label:"Mindre end 2 år",      color:"#183C70"},
+    "2to5":   {label:"2 til 5 år",           color:"#4D9072"},
+    "5to10":  {label:"5 til 10 år",          color:"#B06916"},
+    gt10:     {label:"Mere end 10 år",       color:"#9D3732"},
+    obsolete: {label:"Forældet før plateau", color:"#787076", hollow:true}
+  };
+  const CAT_ORDER = ["lt2","2to5","5to10","gt10","obsolete"];
+
+  /* ---------- Faser ---------- */
+  const PHASES = [
+    {to:0.13, labelX:0.05, name:"Innovation Trigger",            lines:["Innovation","Trigger"]},
+    {to:0.27, labelX:0.21, name:"Peak of Inflated Expectations", lines:["Peak of Inflated","Expectations"]},
+    {to:0.52, labelX:0.43, name:"Trough of Disillusionment",     lines:["Trough of","Disillusionment"]},
+    {to:0.76, labelX:0.63, name:"Slope of Enlightenment",        lines:["Slope of","Enlightenment"]},
+    {to:1.01, labelX:0.88, name:"Plateau of Productivity",       lines:["Plateau of","Productivity"]}
+  ];
+  function phaseFromX(x){ for(const p of PHASES){ if(x < p.to) return p.name; } return PHASES[PHASES.length-1].name; }
+
+  /* ---------- Geometri ---------- */
+  const VB_W=1000, VB_H=600;
+  const M={l:64,r:36,t:54,b:108};
+  const plotW=VB_W-M.l-M.r, plotH=VB_H-M.t-M.b;
+  const xPix=nx=>M.l+nx*plotW, yPix=ny=>M.t+(1-ny)*plotH;
+  const baseY=M.t+plotH;
+  function curveY(x){
+    const peak=Math.exp(-Math.pow((x-0.22)/0.085,2));
+    const plateau=1/(1+Math.exp(-16*(x-0.66)));
+    return 0.10+0.82*peak+0.42*plateau;
+  }
+
+  const NS="http://www.w3.org/2000/svg";
+  const el=(tag,attrs={},...kids)=>{const e=document.createElementNS(NS,tag);for(const k in attrs){if(attrs[k]!=null)e.setAttribute(k,attrs[k]);}kids.forEach(c=>e.appendChild(typeof c==="string"?document.createTextNode(c):c));return e;};
+
+  const svg=document.getElementById("chart");
+  let markersLayer;
+
+  function buildChart(){
+    svg.innerHTML="";
+    const defs=el("defs");
+    const sky=el("linearGradient",{id:"sky",x1:0,y1:0,x2:0,y2:1});
+    sky.appendChild(el("stop",{offset:"0%","stop-color":"#9AD6EF","stop-opacity":".22"}));
+    sky.appendChild(el("stop",{offset:"100%","stop-color":"#D2E9E3","stop-opacity":".0"}));
+    defs.appendChild(sky);
+    const hill=el("linearGradient",{id:"hill",x1:0,y1:0,x2:0,y2:1});
+    hill.appendChild(el("stop",{offset:"0%","stop-color":"#004D60","stop-opacity":".26"}));
+    hill.appendChild(el("stop",{offset:"100%","stop-color":"#004139","stop-opacity":".05"}));
+    defs.appendChild(hill);
+    svg.appendChild(defs);
+
+    svg.appendChild(el("rect",{x:0,y:0,width:VB_W,height:VB_H,fill:"transparent",id:"bg"}));
+    svg.appendChild(el("rect",{x:M.l,y:M.t,width:plotW,height:plotH,fill:"url(#sky)"}));
+
+    let prev=0;
+    PHASES.forEach((p,i)=>{
+      const x0=xPix(prev), x1=xPix(Math.min(p.to,1));
+      if(i>0) svg.appendChild(el("line",{x1:x0,y1:M.t,x2:x0,y2:baseY,stroke:"#C3BFC2","stroke-width":1,"stroke-dasharray":"3 5",opacity:.9}));
+      const cx=xPix(p.labelX);
+      const t=el("text",{x:cx,y:baseY+34,"text-anchor":"middle","font-family":"K2D, sans-serif","font-size":13,"font-weight":600,fill:"#787076"});
+      p.lines.forEach((ln,k)=>t.appendChild(el("tspan",{x:cx,dy:(k===0?0:16)},ln)));
+      svg.appendChild(t); prev=p.to;
+    });
+
+    const pts=[];
+    for(let i=0;i<=200;i++){const x=i/200;pts.push([xPix(x),yPix(curveY(x))]);}
+
+    let dFill="M "+pts[0][0].toFixed(2)+" "+pts[0][1].toFixed(2);
+    for(let i=1;i<pts.length;i++) dFill+=" L "+pts[i][0].toFixed(2)+" "+pts[i][1].toFixed(2);
+    dFill+=" L "+pts[pts.length-1][0].toFixed(2)+" "+baseY+" L "+pts[0][0].toFixed(2)+" "+baseY+" Z";
+    svg.appendChild(el("path",{d:dFill,fill:"url(#hill)",stroke:"none"}));
+
+    let dLine="M ";
+    pts.forEach((pp,i)=>dLine+=(i?" L ":"")+pp[0].toFixed(2)+" "+pp[1].toFixed(2));
+    svg.appendChild(el("path",{d:dLine,fill:"none",stroke:"#004D60","stroke-width":3.5,"stroke-linecap":"round","stroke-linejoin":"round"}));
+
+    svg.appendChild(el("line",{x1:M.l,y1:M.t,x2:M.l,y2:baseY,stroke:"#004D60","stroke-width":2}));
+    svg.appendChild(el("line",{x1:M.l,y1:baseY,x2:M.l+plotW,y2:baseY,stroke:"#004D60","stroke-width":2}));
+
+    const yl=el("text",{x:22,y:M.t+plotH/2,"text-anchor":"middle","font-family":"K2D, sans-serif","font-size":15,"font-style":"italic","font-weight":300,fill:"#004D60",transform:`rotate(-90 22 ${M.t+plotH/2})`});
+    yl.textContent="Expectations  →"; svg.appendChild(yl);
+    const xl=el("text",{x:M.l+plotW/2,y:VB_H-14,"text-anchor":"middle","font-family":"K2D, sans-serif","font-size":15,"font-style":"italic","font-weight":300,fill:"#004D60"});
+    xl.textContent="Time  →"; svg.appendChild(xl);
+
+    markersLayer=el("g",{id:"markers"}); svg.appendChild(markersLayer);
+    document.getElementById("bg").addEventListener("pointerdown",()=>{ if(mode==="admin") selectTech(null); });
+  }
+
+  /* ---------- Markører ---------- */
+  function renderMarkers(){
+    markersLayer.innerHTML="";
+    state.techs.forEach(t=>{
+      const cat=CATS[t.cat]||CATS["5to10"];
+      const cx=xPix(t.x), cy=yPix(curveY(t.x));
+      const g=el("g",{class:"marker"+(t.id===selectedId&&mode==="admin"?" selected":""),"data-id":t.id,transform:`translate(${cx} ${cy})`});
+      g.appendChild(el("circle",{class:"halo",r:15,stroke:cat.color}));
+      g.appendChild(el("circle",{class:"dot",r:8.5,fill:cat.hollow?"#FCFAF4":cat.color,stroke:cat.hollow?cat.color:"#FCFAF4","stroke-width":2.5}));
+      const left=t.x>0.74;
+      const lbl=el("text",{class:"lbl",x:left?-16:16,y:5,"text-anchor":left?"end":"start"});
+      lbl.textContent=t.name; g.appendChild(lbl);
+      attachDrag(g,t);
+      markersLayer.appendChild(g);
+    });
+  }
+
+  function attachDrag(g,t){
+    let dragging=false, moved=false;
+    g.addEventListener("pointerdown",(e)=>{
+      if(mode!=="admin") return;          // forsiden: ingen interaktion
+      e.stopPropagation(); dragging=true; moved=false;
+      g.setPointerCapture(e.pointerId); selectTech(t.id);
+    });
+    g.addEventListener("pointermove",(e)=>{
+      if(!dragging) return; moved=true;
+      const p=clientToSvg(e);
+      let nx=(p.x-M.l)/plotW; nx=Math.max(0,Math.min(1,nx));
+      t.x=nx;
+      g.setAttribute("transform",`translate(${xPix(nx)} ${yPix(curveY(nx))})`);
+      const lbl=g.querySelector(".lbl"); const left=nx>0.74;
+      lbl.setAttribute("x",left?-16:16); lbl.setAttribute("text-anchor",left?"end":"start");
+      updatePhaseReadout();
+    });
+    const end=(e)=>{ if(!dragging)return; dragging=false; try{g.releasePointerCapture(e.pointerId);}catch(_){ } if(moved) scheduleSave(); };
+    g.addEventListener("pointerup",end);
+    g.addEventListener("pointercancel",end);
+  }
+  function clientToSvg(evt){ const pt=svg.createSVGPoint(); pt.x=evt.clientX; pt.y=evt.clientY; return pt.matrixTransform(svg.getScreenCTM().inverse()); }
+
+  /* ---------- Sidepanel (kun admin) ---------- */
+  const panel=document.getElementById("panel");
+  function selectTech(id){ selectedId=id; document.querySelectorAll(".marker").forEach(m=>m.classList.toggle("selected",m.getAttribute("data-id")===id)); renderPanel(); }
+
+  function renderPanel(){
+    const t=state.techs.find(x=>x.id===selectedId);
+    if(!t){
+      panel.innerHTML=legendHTML('<h2>Placér jeres teknologier</h2><p class="hint">Klik på en prik for at redigere den, og <b>træk den langs horisontlinjen</b> for at placere teknologien i dens fase. Tilføj nye med knappen øverst.</p>');
+      return;
+    }
+    panel.innerHTML=
+      '<h2>Rediger teknologi</h2>'+
+      '<p class="phase-readout">Fase: <b id="phaseTxt">'+phaseFromX(t.x)+'</b></p>'+
+      '<div class="field"><label for="nameInput">Navn</label><input type="text" id="nameInput" value="'+escapeHtml(t.name)+'"></div>'+
+      '<div class="field"><label>Tid til plateau</label><div class="cats" id="cats">'+
+        CAT_ORDER.map(k=>{const c=CATS[k];return '<label class="cat-opt'+(t.cat===k?' active':'')+'" data-cat="'+k+'"><span class="swatch'+(c.hollow?' hollow':'')+'" style="background:'+c.color+'"></span><span>'+c.label+'</span><input type="radio" name="cat" value="'+k+'"'+(t.cat===k?' checked':'')+'></label>';}).join('')+
+      '</div></div>'+
+      '<div class="panel-actions"><button class="btn-danger" id="delBtn">Slet teknologi</button></div>'+
+      '<div class="divider"></div>'+legendBody();
+
+    const nameInput=document.getElementById("nameInput");
+    nameInput.addEventListener("input",()=>{ t.name=nameInput.value; renderMarkers(); document.querySelectorAll(".marker").forEach(m=>m.classList.toggle("selected",m.getAttribute("data-id")===selectedId)); scheduleSave(); });
+    document.getElementById("cats").addEventListener("click",(e)=>{ const opt=e.target.closest(".cat-opt"); if(!opt)return; t.cat=opt.getAttribute("data-cat"); renderMarkers(); document.querySelectorAll(".marker").forEach(m=>m.classList.toggle("selected",m.getAttribute("data-id")===selectedId)); renderPanel(); scheduleSave(); });
+    document.getElementById("delBtn").addEventListener("click",()=>{ state.techs=state.techs.filter(x=>x.id!==selectedId); selectedId=null; renderMarkers(); renderPanel(); scheduleSave(); });
+  }
+  function updatePhaseReadout(){ const t=state.techs.find(x=>x.id===selectedId); if(!t)return; const txt=document.getElementById("phaseTxt"); if(txt) txt.textContent=phaseFromX(t.x); }
+  function legendBody(){ return '<div class="legend"><h3>Tid til plateau</h3>'+CAT_ORDER.map(k=>{const c=CATS[k];return '<div class="legend-item"><span class="swatch'+(c.hollow?' hollow':'')+'" style="background:'+c.color+'"></span>'+c.label+'</div>';}).join('')+'</div>'; }
+  function legendHTML(top){ return top+'<div class="divider"></div>'+legendBody(); }
+  function escapeHtml(s){return s.replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));}
+
+  /* ---------- Signaturforklaring (visningstilstand) ---------- */
+  function renderLegendStrip(){
+    const strip=document.getElementById("legendStrip");
+    strip.innerHTML='<span class="strip-label">Tid til plateau</span>'+
+      CAT_ORDER.map(k=>{const c=CATS[k];return '<span class="legend-item"><span class="swatch'+(c.hollow?' hollow':'')+'" style="background:'+c.color+'"></span>'+c.label+'</span>';}).join('');
+  }
+
+  /* ---------- Tilstand / seed ---------- */
+  const uid=()=>Math.random().toString(36).slice(2,9);
+  function seed(){
+    return {subtitle:"teknologier i Vejle Kommune",year:"2026",techs:[
+      {id:uid(),name:"Digitale tvillinger / Smart City",x:0.07,cat:"5to10"},
+      {id:uid(),name:"Generativ AI & sprogmodeller",x:0.19,cat:"2to5"},
+      {id:uid(),name:"Chatbot til borgerservice",x:0.27,cat:"2to5"},
+      {id:uid(),name:"Blockchain i forvaltning",x:0.40,cat:"gt10"},
+      {id:uid(),name:"IoT-sensorer (affald & klima)",x:0.47,cat:"5to10"},
+      {id:uid(),name:"Dronebaseret inspektion",x:0.61,cat:"2to5"},
+      {id:uid(),name:"Velfærdsteknologi",x:0.69,cat:"2to5"},
+      {id:uid(),name:"RPA – procesautomatisering",x:0.80,cat:"lt2"},
+      {id:uid(),name:"Digital selvbetjening",x:0.90,cat:"lt2"}
+    ]};
+  }
+  let state=seed(); let selectedId=null; let mode="view";
+
+  /* ---------- Tilstandsskift (view / admin) ---------- */
+  const subEl=document.getElementById("subtitle"), yearEl=document.getElementById("year");
+  const adminBtnTxt=document.getElementById("adminBtnTxt");
+  function setMode(m){
+    mode=m;
+    document.body.classList.toggle("admin-mode",m==="admin");
+    document.body.classList.toggle("view-mode",m!=="admin");
+    const editable=(m==="admin");
+    subEl.setAttribute("contenteditable",editable?"true":"false");
+    yearEl.setAttribute("contenteditable",editable?"true":"false");
+    adminBtnTxt.textContent = (m==="admin") ? "Forlad admin" : "Admin";
+    if(m!=="admin") selectedId=null;
+    renderMarkers(); renderPanel(); renderLegendStrip();
+  }
+
+  /* ---------- Admin-login modal ---------- */
+  const modal=document.getElementById("adminModal");
+  const codeInput=document.getElementById("adminCode");
+  const adminErr=document.getElementById("adminErr");
+  function openModal(){ adminErr.classList.remove("show"); codeInput.value=""; modal.classList.add("open"); setTimeout(()=>codeInput.focus(),50); }
+  function closeModal(){ modal.classList.remove("open"); }
+  function tryLogin(){
+    if(codeInput.value===ADMIN_CODE){ closeModal(); setMode("admin"); }
+    else{ adminErr.classList.add("show"); codeInput.select(); }
+  }
+  document.getElementById("adminBtn").addEventListener("click",()=>{ if(mode==="admin") setMode("view"); else openModal(); });
+  document.getElementById("adminLogin").addEventListener("click",tryLogin);
+  document.getElementById("adminCancel").addEventListener("click",closeModal);
+  codeInput.addEventListener("keydown",(e)=>{ if(e.key==="Enter") tryLogin(); if(e.key==="Escape") closeModal(); });
+  modal.addEventListener("click",(e)=>{ if(e.target===modal) closeModal(); });
+
+  /* ---------- Toolbar ---------- */
+  document.getElementById("addBtn").addEventListener("click",()=>{
+    const t={id:uid(),name:"Ny teknologi",x:0.05,cat:"5to10"}; state.techs.push(t);
+    renderMarkers(); selectTech(t.id); scheduleSave();
+    const ni=document.getElementById("nameInput"); if(ni){ni.focus();ni.select();}
+  });
+  document.getElementById("resetBtn").addEventListener("click",()=>{
+    if(!confirm("Nulstil til udgangspunktet? Alle dine ændringer slettes.")) return;
+    state=seed(); selectedId=null; syncHeader(); renderMarkers(); renderPanel(); renderLegendStrip(); scheduleSave();
+  });
+  subEl.addEventListener("input",()=>{ state.subtitle=subEl.textContent.trim(); scheduleSave(); });
+  yearEl.addEventListener("input",()=>{ state.year=yearEl.textContent.trim(); scheduleSave(); });
+  function syncHeader(){ subEl.textContent=state.subtitle; yearEl.textContent=state.year; }
+
+  /* ---------- Init ---------- */
+  (async function init(){
+    buildChart();
+    const saved=await loadState();
+    if(saved && Array.isArray(saved.techs)){ state=Object.assign(seed(),saved); if(!saved.subtitle) state.subtitle=seed().subtitle; }
+    syncHeader();
+    setMode("view");        // forsiden starter altid som rent visningsbillede
+    window.addEventListener("resize",()=>renderMarkers());
+  })();
+
+})();
+</script>
+</body>
+</html>

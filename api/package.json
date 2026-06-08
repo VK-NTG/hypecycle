@@ -1,0 +1,13 @@
+{
+  "name": "vejle-hypecycle-api",
+  "version": "1.0.0",
+  "description": "Azure Functions API til Vejle Kommune Hype Cycle – persistens i Blob Storage",
+  "main": "src/functions/*.js",
+  "scripts": {
+    "start": "func start"
+  },
+  "dependencies": {
+    "@azure/functions": "^4.5.0",
+    "@azure/storage-blob": "^12.24.0"
+  }
+}
